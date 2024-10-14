@@ -6,6 +6,8 @@ const Home = ()=>{
     const [page, setPage] = useState(1);
     const [query, setQuery] = useState('');
     const inRef = useRef(null);
+    const imgRef = useRef(null);
+    const [scales,setScales] = useState({});
     const navigate = useNavigate();
     const showmenu = (e)=>{
     if(menu) {
@@ -65,11 +67,20 @@ const Home = ()=>{
     setPage(page+1);
   },[])
 
-  const showDetails = (id,e)=>{
-    e.preventDefault();
+  const showDetails = (id)=>{
     navigate(`/details/${id}`);
   }
 
+  const handleZoom = (zoom,id)=>{
+     if(zoom == 'in') {
+      setScales({...scales,[id]: (scales[id] || 1) +0.1});
+      console.log(id);
+      
+     }
+     else if(zoom == 'out') {
+      setScales({...scales,[id]: Math.max((scales[id] || 1)-0.1,1)})
+     }
+  }
     return (
         <>
           <nav>
@@ -88,18 +99,18 @@ const Home = ()=>{
             return data.desc?.toLowerCase().includes(query.toLowerCase()) || data.name.toLowerCase().includes(query.toLowerCase())
           }).map(data => {
             return (
-              <div onClick={(e)=>showDetails(data.id,e)} key={data.id + Date.now()} className="card">
-                <img src={data.url} alt="" />
+              <div key={data.id + Date.now()} className="card">
+                <img src={data.url} alt="" style={{ transform: `scale(${scales[data.id] || 1})`, transition: 'transform 0.3s ease' }} />
                 <div className="card-desc">
                   <h2>{data.name}</h2>
                   <p>{data.desc}</p>
                   <p>{data.time}</p>
                 </div>
                 <div className="zoom-controls">
-                  <i className="fas fa-search-plus zoom-in"></i>
-                  <i className="fas fa-search-minus zoom-out"></i>
+                  <i onClick={(e)=>handleZoom('in',data.id)} className="fas fa-search-plus zoom-in"></i>
+                  <i onClick={(e)=>handleZoom('out',data.id)} className="fas fa-search-minus zoom-out"></i>
                 </div>
-                <div className="stripe"></div>
+                <div onClick={(e)=>showDetails(data.id)} className="stripe"></div>
               </div>
             )
           })
