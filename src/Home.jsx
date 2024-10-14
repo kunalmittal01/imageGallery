@@ -2,7 +2,6 @@ import { useState,useRef,useEffect } from "react";
 import {useNavigate} from 'react-router-dom';
 const Home = ()=>{
     const [menu, setMenu] = useState(false);
-    const [imageArr, setImageArr] = useState([]);
     const [dispArr, setDispArr] = useState([]);
     const [page, setPage] = useState(1);
     const [query, setQuery] = useState('');
@@ -20,7 +19,6 @@ const Home = ()=>{
       setMenu(false);
     }
     else {
-      console.log(e.target);
       if(e.target.tagName == 'DIV') {
         e.target.parentElement.style.height = '5.8rem';
       }
@@ -33,8 +31,6 @@ const Home = ()=>{
   const getImages = async(page) => {
     let resp = await fetch(`https://api.unsplash.com/photos/?page=${page}&per_page=20&client_id=mKF2f2UHbRFgwLp9jIJ6knMi2a3RKMsVVnWHYOqFves`);
     let data = await resp.json();
-    console.log(data);
-    
     return data;
   }
   const setDisplayData = async(page)=>{
@@ -48,7 +44,6 @@ const Home = ()=>{
         time: obj.updated_at
       }
     });
-    setImageArr(images);
     setDispArr([...dispArr,...images]);
   }
 
@@ -70,7 +65,8 @@ const Home = ()=>{
     setPage(page+1);
   },[])
 
-  const showDetails = (id)=>{
+  const showDetails = (id,e)=>{
+    e.preventDefault();
     navigate(`/details/${id}`);
   }
 
@@ -92,13 +88,18 @@ const Home = ()=>{
             return data.desc?.toLowerCase().includes(query.toLowerCase()) || data.name.toLowerCase().includes(query.toLowerCase())
           }).map(data => {
             return (
-              <div onClick={()=>showDetails(data.id)} key={data.id + Date.now()} className="card">
+              <div onClick={(e)=>showDetails(data.id,e)} key={data.id + Date.now()} className="card">
                 <img src={data.url} alt="" />
                 <div className="card-desc">
                   <h2>{data.name}</h2>
                   <p>{data.desc}</p>
                   <p>{data.time}</p>
                 </div>
+                <div className="zoom-controls">
+                  <i className="fas fa-search-plus zoom-in"></i>
+                  <i className="fas fa-search-minus zoom-out"></i>
+                </div>
+                <div className="stripe"></div>
               </div>
             )
           })

@@ -2,11 +2,6 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  /* color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424; */
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -34,7 +29,6 @@ nav p {
 
 .search-cont {
   display: flex;
-  /* gap: 0.5rem; */
 }
 
 .search-cont input {
@@ -90,10 +84,44 @@ nav p {
 }
 
 .card img {
-  /* width: 18rem; */
   width: 100%;
   height: 100%;
   border-radius: 10px;
+}
+
+.zoom-controls {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  font-size: 20px;
+  color: gray;
+  transition: display 1s ease;
+}
+
+.stripe {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.card:hover .stripe {
+  opacity: 1;
+}
+
+.card:hover .zoom-controls {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-bottom: 2rem;
 }
 
 .details {
@@ -105,7 +133,7 @@ nav p {
 
 .details img {
   width: 40%;
-  height: 30rem
+  height: 30rem;
 }
 
 .details .wrap {
